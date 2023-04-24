@@ -9,6 +9,7 @@ readdirSync("./router").map((route) =>
     app.use("/", require(`./router/${route}`))
 );
 
-app.listen(8000, () => {
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
     console.log("server is lestining...");
 });
