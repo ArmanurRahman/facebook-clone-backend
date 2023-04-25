@@ -17,7 +17,7 @@ exports.usernameValidation = async (userName) => {
     do {
         const existusername = await User.findOne({ userName });
         if (existusername) {
-            userName += (+new Date() + Math.random())
+            userName += (+new Date() * Math.random())
                 .toString()
                 .substring(0, 1);
         } else {

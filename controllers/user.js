@@ -1,6 +1,8 @@
 const User = require("../model/user");
 const validator = require("../helpers/validate");
+const tokenGenerator = require("../helpers/token");
 const crypt = require("bcrypt");
+const { sendVerificationMail } = require("../helpers/mailer");
 
 exports.register = async (req, res) => {
     try {
@@ -58,7 +60,24 @@ exports.register = async (req, res) => {
             gender,
         }).save();
 
-        res.json(user);
+        const emailVarificationToken = tokenGenerator.generateToken(
+            { id: user._id.toString() },
+            "30m"
+        );
+        const url = `${process.env.BASE_URL}/activate/${emailVarificationToken}`;
+        sendVerificationMail(user.email, user.firstName, url);
+
+        const token = tokenGenerator.generateToken({ id: user._id }, "7d");
+
+        res.status(201).json({
+            userName: user.userName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            picture: user.picture,
+            verified: user.verified,
+            token,
+            message: "Registration success! Please active your email address",
+        });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
