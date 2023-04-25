@@ -101,3 +101,32 @@ exports.activate = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res
+                .status(400)
+                .json({ message: "this email is not connected to any accout" });
+        }
+
+        const isValidPass = await crypt.compare(password, user.password);
+        if (!isValidPass) {
+            return res.status(400).json({ message: "invalid credential" });
+        }
+
+        const token = tokenGenerator.generateToken({ id: user._id }, "7d");
+        return res.status(200).json({
+            userName: user.userName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            picture: user.picture,
+            verified: user.verified,
+            token,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
