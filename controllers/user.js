@@ -3,6 +3,7 @@ const validator = require("../helpers/validate");
 const tokenGenerator = require("../helpers/token");
 const crypt = require("bcrypt");
 const { sendVerificationMail } = require("../helpers/mailer");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     try {
@@ -80,5 +81,23 @@ exports.register = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({ message: error.message });
+    }
+};
+
+exports.activate = async (req, res) => {
+    try {
+        const { token } = req.body;
+        const user = jwt.verify(token, process.env.SECRET_KEY);
+        const result = await User.findById(user.id);
+        if (result.verified) {
+            return res
+                .status(400)
+                .json({ message: "the email already activated" });
+        }
+
+        await User.findByIdAndUpdate(user.id, { verified: true });
+        return res.status(200).json({ message: "accout has been activated" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
