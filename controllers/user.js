@@ -89,6 +89,15 @@ exports.activate = async (req, res) => {
         const { token } = req.body;
         const user = jwt.verify(token, process.env.SECRET_KEY);
         const result = await User.findById(user.id);
+        const validUser = req.user.id;
+
+        if (validUser !== user.id) {
+            return res
+                .status(400)
+                .json({
+                    message: "You don't have permission to perform this action",
+                });
+        }
         if (result.verified) {
             return res
                 .status(400)
