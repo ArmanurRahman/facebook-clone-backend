@@ -63,7 +63,7 @@ exports.register = async (req, res) => {
 
         const emailVarificationToken = tokenGenerator.generateToken(
             { id: user._id.toString() },
-            "30m"
+            "1d"
         );
         const url = `${process.env.BASE_URL}/activate/${emailVarificationToken}`;
         sendVerificationMail(user.email, user.firstName, url);
@@ -84,6 +84,24 @@ exports.register = async (req, res) => {
     }
 };
 
+exports.resendVerificationEmail = async (req, res) => {
+    const { user } = req;
+    try {
+        const currentUser = await User.findOne({ _id: user.id });
+        const emailVarificationToken = tokenGenerator.generateToken(
+            { id: user.id.toString() },
+            "1d"
+        );
+        const url = `${process.env.BASE_URL}/activate/${emailVarificationToken}`;
+        sendVerificationMail(currentUser.email, currentUser.firstName, url);
+        return res
+            .status(200)
+            .json({ message: "verification email has been sent" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 exports.activate = async (req, res) => {
     try {
         const { token } = req.body;
@@ -92,11 +110,9 @@ exports.activate = async (req, res) => {
         const validUser = req.user.id;
 
         if (validUser !== user.id) {
-            return res
-                .status(400)
-                .json({
-                    message: "You don't have permission to perform this action",
-                });
+            return res.status(400).json({
+                message: "You don't have permission to perform this action",
+            });
         }
         if (result.verified) {
             return res
