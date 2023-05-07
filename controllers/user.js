@@ -76,6 +76,7 @@ exports.register = async (req, res) => {
         const token = tokenGenerator.generateToken({ id: user._id }, "7d");
 
         res.status(201).json({
+            id: user._id.toString(),
             userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -149,6 +150,7 @@ exports.login = async (req, res) => {
 
         const token = tokenGenerator.generateToken({ id: user._id }, "7d");
         return res.status(200).json({
+            id: user._id.toString(),
             userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
