@@ -20,7 +20,7 @@ const postSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
-        backgroung: {
+        background: {
             type: String,
         },
         comments: {
