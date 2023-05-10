@@ -237,6 +237,9 @@ exports.getProfile = async (req, res) => {
         const { userName } = req.params;
         console.log(userName);
         const profile = await User.findOne({ userName }).select("-password");
+        if (!profile) {
+            return res.status(404).json({ message: "profile not found" });
+        }
         return res.status(200).json(profile);
     } catch (error) {
         return res.status(500).json({ message: error.message });
