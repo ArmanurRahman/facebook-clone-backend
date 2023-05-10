@@ -8,6 +8,7 @@ const {
     sendValidationCode,
     checkValidationCode,
     changePassword,
+    getProfile,
 } = require("../controllers/user");
 const { authUser } = require("../middleware/auth");
 const router = express.Router();
@@ -20,4 +21,5 @@ router.post("/findUser", findUser);
 router.post("/sendValidationCode", sendValidationCode);
 router.post("/checkValidationCode", checkValidationCode);
 router.post("/changePassword", changePassword);
+router.get("/getProfile/:userName", authUser, getProfile);
 module.exports = router;
