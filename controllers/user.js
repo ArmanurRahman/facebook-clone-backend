@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const Code = require("../model/code");
+const Post = require("../model/post");
 const validator = require("../helpers/validate");
 const tokenGenerator = require("../helpers/token");
 const crypt = require("bcrypt");
@@ -235,11 +236,17 @@ exports.changePassword = async (req, res) => {
 exports.getProfile = async (req, res) => {
     try {
         const { userName } = req.params;
-        console.log(userName);
-        const profile = await User.findOne({ userName }).select("-password");
+        const profile = await User.findOne({ userName })
+            .select("-password")
+            .lean()
+            .exec();
         if (!profile) {
             return res.status(404).json({ message: "profile not found" });
         }
+        const posts = await Post.find({ user: profile._id })
+            .sort({ createdAt: "desc" })
+            .populate("user");
+        profile.posts = posts;
         return res.status(200).json(profile);
     } catch (error) {
         return res.status(500).json({ message: error.message });
