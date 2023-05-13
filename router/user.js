@@ -9,6 +9,7 @@ const {
     checkValidationCode,
     changePassword,
     getProfile,
+    uploadProfilePicture,
 } = require("../controllers/user");
 const { authUser } = require("../middleware/auth");
 const router = express.Router();
@@ -22,4 +23,5 @@ router.post("/sendValidationCode", sendValidationCode);
 router.post("/checkValidationCode", checkValidationCode);
 router.post("/changePassword", changePassword);
 router.get("/getProfile/:userName", authUser, getProfile);
+router.put("/uploadProfilePicture", authUser, uploadProfilePicture);
 module.exports = router;
