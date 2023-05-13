@@ -10,6 +10,7 @@ const {
     changePassword,
     getProfile,
     uploadProfilePicture,
+    uploadCoverPicture,
 } = require("../controllers/user");
 const { authUser } = require("../middleware/auth");
 const router = express.Router();
@@ -24,4 +25,5 @@ router.post("/checkValidationCode", checkValidationCode);
 router.post("/changePassword", changePassword);
 router.get("/getProfile/:userName", authUser, getProfile);
 router.put("/uploadProfilePicture", authUser, uploadProfilePicture);
+router.put("/uploadCoverPicture", authUser, uploadCoverPicture);
 module.exports = router;

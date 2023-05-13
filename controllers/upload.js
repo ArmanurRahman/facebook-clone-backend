@@ -46,7 +46,6 @@ const uploadToCloudinary = async (file, path) => {
 
 exports.listImages = async (req, res) => {
     const { path, sort, max } = req.body;
-    console.log(path, sort, max);
     cloudinary.v2.search
         .expression(`${path}`)
         .sort_by("created_at", `${sort}`)
