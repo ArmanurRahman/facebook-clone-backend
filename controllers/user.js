@@ -260,7 +260,9 @@ exports.uploadProfilePicture = async (req, res) => {
             picture: url,
         });
         return res.status(200).json(url);
-    } catch (error) {}
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
 
 exports.uploadCoverPicture = async (req, res) => {
@@ -270,5 +272,29 @@ exports.uploadCoverPicture = async (req, res) => {
             cover: url,
         });
         return res.status(200).json(url);
-    } catch (error) {}
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+exports.updateUserDetails = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const { text } = req.body;
+
+        const result = await User.findByIdAndUpdate(
+            req.user.id,
+            {
+                $set: {
+                    [`details.${id}`]: text,
+                },
+            },
+            {
+                returnDocument: "after",
+            }
+        );
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
