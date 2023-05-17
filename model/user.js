@@ -64,22 +64,30 @@ const userSchema = mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        friends: {
-            type: Array,
-            default: [],
-        },
-        follower: {
-            type: Array,
-            default: [],
-        },
-        following: {
-            type: Array,
-            default: [],
-        },
-        request: {
-            type: Array,
-            default: [],
-        },
+        friends: [
+            {
+                type: ObjectId,
+                ref: "User",
+            },
+        ],
+        follower: [
+            {
+                type: ObjectId,
+                ref: "User",
+            },
+        ],
+        following: [
+            {
+                type: ObjectId,
+                ref: "User",
+            },
+        ],
+        request: [
+            {
+                type: ObjectId,
+                ref: "User",
+            },
+        ],
         search: [
             {
                 user: {
