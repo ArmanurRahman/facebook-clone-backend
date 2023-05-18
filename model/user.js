@@ -70,7 +70,7 @@ const userSchema = mongoose.Schema(
                 ref: "User",
             },
         ],
-        follower: [
+        followers: [
             {
                 type: ObjectId,
                 ref: "User",
@@ -82,7 +82,7 @@ const userSchema = mongoose.Schema(
                 ref: "User",
             },
         ],
-        request: [
+        requests: [
             {
                 type: ObjectId,
                 ref: "User",
