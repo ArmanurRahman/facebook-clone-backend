@@ -1,12 +1,12 @@
-const Reacts = require("../model/reacts");
+const React = require("../model/reacts");
 const mongoose = require("mongoose");
 
 exports.react = async (req, res) => {
     const { react, postId } = req.body;
     try {
-        const oldReact = await Reacts.findOne({
+        const oldReact = await React.findOne({
             post: postId,
-            reactedBy: mongoose.Types.ObjectId(req.user.id),
+            reactedBy: new mongoose.Types.ObjectId(req.user.id),
         });
         if (oldReact) {
             if (oldReact.react === react) {

@@ -23,22 +23,24 @@ const postSchema = new mongoose.Schema(
         background: {
             type: String,
         },
-        comments: {
-            comment: {
-                type: String,
+        comments: [
+            {
+                comment: {
+                    type: String,
+                },
+                image: {
+                    type: String,
+                },
+                commentBy: {
+                    type: ObjectId,
+                    ref: "User",
+                },
+                commentAt: {
+                    type: Date,
+                    default: new Date(),
+                },
             },
-            image: {
-                type: String,
-            },
-            commentBy: {
-                type: ObjectId,
-                ref: "User",
-            },
-            commentAt: {
-                type: Date,
-                default: new Date(),
-            },
-        },
+        ],
     },
     {
         timestamps: true,
