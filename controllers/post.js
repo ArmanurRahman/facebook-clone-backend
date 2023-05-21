@@ -1,4 +1,6 @@
+const mongoose = require("mongoose");
 const Post = require("../model/post");
+const User = require("../model/user");
 
 exports.createPost = async (req, res) => {
     try {
@@ -11,7 +13,12 @@ exports.createPost = async (req, res) => {
 
 exports.getAllPost = async (req, res) => {
     try {
-        const post = await Post.find()
+        const followingObj = await User.findById(req.user.id, {
+            following: 1,
+        });
+        const following = followingObj.following || [];
+        following.push(new mongoose.Types.ObjectId(req.user.id));
+        const post = await Post.find({ user: { $in: following } })
             .populate("user", "firstName lastName userName gender picture")
             .populate(
                 "comments.commentBy",
