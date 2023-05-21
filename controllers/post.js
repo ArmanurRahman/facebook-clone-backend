@@ -5,6 +5,10 @@ const User = require("../model/user");
 exports.createPost = async (req, res) => {
     try {
         const post = await new Post(req.body).save();
+        await post.populate(
+            "user",
+            "firstName lastName userName gender picture"
+        );
         return res.status(201).json(post);
     } catch (error) {
         return res.status(400).json({ message: error.message });
