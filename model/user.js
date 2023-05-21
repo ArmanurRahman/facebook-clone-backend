@@ -129,16 +129,18 @@ const userSchema = mongoose.Schema(
                 type: String,
             },
         },
-        savePosts: {
-            post: {
-                type: ObjectId,
-                ref: "Post",
+        savePosts: [
+            {
+                post: {
+                    type: ObjectId,
+                    ref: "Post",
+                },
+                savedAt: {
+                    type: Date,
+                    required: true,
+                },
             },
-            createdAt: {
-                type: Date,
-                default: new Date(),
-            },
-        },
+        ],
     },
     {
         timestamps: true,
