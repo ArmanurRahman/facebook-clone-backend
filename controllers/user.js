@@ -10,6 +10,7 @@ const {
 } = require("../helpers/mailer");
 const jwt = require("jsonwebtoken");
 const generateCode = require("../helpers/generateCode");
+const mongoose = require("mongoose");
 
 exports.register = async (req, res) => {
     try {
@@ -609,6 +610,24 @@ exports.removeFromSearch = async (req, res) => {
             { $pull: { search: { user: searchUser } } }
         );
         return res.status(200).json({ message: "ok" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+exports.getFriendsPageInfos = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id)
+            .select("friends requests")
+            .populate("friends", "firstName lastName picture userName")
+            .populate("requests", "firstName lastName picture userName");
+        const sentRequests = await User.find({
+            requests: new mongoose.Types.ObjectId(req.user.id),
+        }).select("firstName lastName picture userName");
+        return res.json({
+            friends: user.friends,
+            requests: user.requests,
+            sentRequests,
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
